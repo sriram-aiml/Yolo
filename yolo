@@ -1,0 +1,36 @@
+from ultralytics import YOLO
+import matplotlib.pyplot as plt
+import cv2
+
+
+model=YOLO("yolov8n.pt")
+#results=model("Untitled.jpg")
+#print(results)
+#results[0].show()
+
+#img = results[0].plot()  # draws boxes on image, returns NumPy array (BGR)
+
+# Convert BGR (OpenCV) → RGB (matplotlib)
+#img_rgb = img[:, :, ::-1]
+
+#plt.imshow(img_rgb)
+#plt.axis("off")
+#plt.show()
+
+cap=cv2.VideoCapture(0) #1 for attached external camera, 0 for default webcam, or provide file path
+
+while cap.isOpened():
+    ret,frame=cap.read()
+    if not ret:
+        break
+
+    results=model(frame)
+    annotated_frame=results[0].plot()
+
+    cv2.imshow("Webcam",annotated_frame)
+
+    #Exit on q
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+cap.release()
+cv2.destroyAllWindows()
